@@ -63,7 +63,15 @@ export class ParsePushAdapter {
           });
           sendPromises.push(Promise.all(results));
         } else {
-          sendPromises.push(sender.send(data, devices));
+          let results = devices.map((device) => {
+            return Promise.resolve({
+              device,
+              transmitted: false,
+              response: {'error': `Ignoring transmissions for testing purposes`}
+            })
+          });
+          sendPromises.push(Promise.all(results));
+          //sendPromises.push(sender.send(data, devices));
         }
       }
     }
