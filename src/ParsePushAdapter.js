@@ -31,7 +31,11 @@ export class ParsePushAdapter {
               devices.forEach((device) => {
                   let promise = Promise.resolve({
                       transmitted: true,
-                      device: device,
+                      device: {
+						  deviceType: device.deviceType,
+						  deviceToken: device.token ? device.token.toString('hex') : "weird"
+					  },
+
                       result: {info: "transmission is off"}
                   });
               allPromises.push(promise);
