@@ -25,14 +25,28 @@ export class ParsePushAdapter {
         throw new Parse.Error(Parse.Error.PUSH_MISCONFIGURED,
                               'Push to ' + pushTypes + ' is not supported');
       }
-      switch (pushType) {
-        case 'ios':
-          this.senderMap[pushType] = new APNS(pushConfig[pushType]);
-          break;
-        case 'android':
-          this.senderMap[pushType] = new GCM(pushConfig[pushType]);
-          break;
-      }
+      this.senderMap[pushType] = {
+          send: function(data, devices) {
+              let allPromises = [];
+              devices.forEach((device) => {
+                  let promise = Promise.resolve({
+                      transmitted: false,
+                      device: device,
+                      result: {error: "transmission is off"}
+                  });
+              allPromises.push(promise);
+              });
+              return Promise.all(allPromises);
+          }
+      };
+      // switch (pushType) {
+      //   case 'ios':
+      //     this.senderMap[pushType] = new APNS(pushConfig[pushType]);
+      //     break;
+      //   case 'android':
+      //     this.senderMap[pushType] = new GCM(pushConfig[pushType]);
+      //     break;
+      // }
     }
   }
 
@@ -63,15 +77,7 @@ export class ParsePushAdapter {
           });
           sendPromises.push(Promise.all(results));
         } else {
-          let results = devices.map((device) => {
-            return Promise.resolve({
-              device,
-              transmitted: false,
-              response: {'error': `Ignoring transmissions for testing purposes`}
-            })
-          });
-          sendPromises.push(Promise.all(results));
-          //sendPromises.push(sender.send(data, devices));
+          sendPromises.push(sender.send(data, devices));
         }
       }
     }
