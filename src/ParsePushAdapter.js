@@ -34,9 +34,8 @@ export class ParsePushAdapter {
                       device: {
 						  deviceType: device.deviceType,
 						  deviceToken: device.token ? device.token.toString('hex') : "weird"
-					  },
+					  }
 
-                      result: {info: "transmission is off"}
                   });
               allPromises.push(promise);
               });
