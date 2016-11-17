@@ -30,9 +30,9 @@ export class ParsePushAdapter {
               let allPromises = [];
               devices.forEach((device) => {
                   let promise = Promise.resolve({
-                      transmitted: false,
+                      transmitted: true,
                       device: device,
-                      result: {error: "transmission is off"}
+                      result: {info: "transmission is off"}
                   });
               allPromises.push(promise);
               });
